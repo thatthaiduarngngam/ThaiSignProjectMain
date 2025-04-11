@@ -4,6 +4,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
+from tensorflow.keras.callbacks import EarlyStopping
+
 import mediapipe as mp
 import random
 
@@ -136,12 +138,14 @@ model.compile(
     metrics=['accuracy']
 )
 
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 # เทรนโมเดล
 history = model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
-    epochs=20,
-    batch_size=32
+    epochs=100,
+    batch_size=4,
+    callbacks=[early_stopping]
 )
 
 # บันทึกโมเดล
